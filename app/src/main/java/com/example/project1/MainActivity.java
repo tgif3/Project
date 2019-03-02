@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         linearLayout.removeAllViews();
         for (int num : strings1) {
             TextView textView = new TextView(context);
+            textView.setTextSize(25);
             textView.setText(num + " ");
 
             linearLayout.addView(textView);
