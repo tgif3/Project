@@ -10,17 +10,22 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.project1.interfaces.RepositoryObserver;
+import com.example.project1.interfaces.Subject;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RepositoryObserver {
     private int last;
     private Context context;
     private Handler handler;
     private LinearLayout linearLayout;
     private static final int DELAY = 100;
+
+    private Subject notificationCenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
         last = 0;
         context = MainActivity.this;
         handler = new Handler();
+
+        notificationCenter = NotificationCenter.getInstance();
+        notificationCenter.registerObserver(this);
 
         // initialize
         initializeUI();
@@ -92,5 +100,16 @@ public class MainActivity extends AppCompatActivity {
 
             linearLayout.addView(textView);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        notificationCenter.removeObserver(this);
+    }
+
+    @Override
+    public void updateData() {
+        updateLinearLayout();
     }
 }
