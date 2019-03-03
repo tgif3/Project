@@ -17,18 +17,6 @@ public class NotificationCenter implements Subject {
 //        getNewDataFromRemote();
     }
 
-//    // Simulate network
-//    private void getNewDataFromRemote() {
-//        final Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                setUserData();
-//            }
-//        }, 10000);
-//    }
-
-    // Creates a Singleton of the class
     public static NotificationCenter getInstance() {
         if(INSTANCE == null) {
             INSTANCE = new NotificationCenter();
@@ -54,8 +42,4 @@ public class NotificationCenter implements Subject {
             observer.updateData();
         }
     }
-
-//    public void setUserData() {
-//        dataLoaded();
-//    }
 }
