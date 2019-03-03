@@ -2,6 +2,7 @@ package com.example.project1;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,15 +16,20 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
+    private int last;
     private Context context;
+    private Handler handler;
     private LinearLayout linearLayout;
+    private static final int DELAY = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        last = 0;
         context = MainActivity.this;
+        handler = new Handler();
 
         // initialize
         initializeUI();
@@ -31,33 +37,43 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeUI() {
         linearLayout = findViewById(R.id.linear_layout);
-        updateLinearLayout();
-
 
         Button clearBtn = findViewById(R.id.clear_btn);
         clearBtn.setOnClickListener(v -> {
-            MemoryManager.setNumbers(context, new HashSet<>());
-            updateLinearLayout();
+            last = 0;
+            linearLayout.removeAllViews();
         });
 
         Button refreshBtn = findViewById(R.id.refresh_btn);
         refreshBtn.setOnClickListener(v -> {
-            MemoryManager.initialize(context);
-            updateLinearLayout();
+            int mLast = MemoryManager.getLastNumber(context);
+            linearLayout.removeAllViews();
+            if (last < mLast) {
+                for (int i = last + 1; i <= last + 10; i++) {
+                    TextView textView = new TextView(context);
+                    textView.setTextSize(25);
+                    textView.setText(i + " ");
+
+                    linearLayout.addView(textView);
+                }
+            }
+            last += 10;
         });
 
         Button getBtn = findViewById(R.id.get_btn);
         getBtn.setOnClickListener(v -> {
-            int last = MemoryManager.getLastNumber(context);
-            HashSet<String> strings = new HashSet<>();
+            handler.postDelayed(() -> {
+                int last = MemoryManager.getLastNumber(context);
+                HashSet<String> strings = new HashSet<>();
 
-            for (int i = last + 1; i < last + 11; i++) {
-                strings.add(Integer.toString(i));
-            }
+                for (int i = last + 1; i < last + 11; i++) {
+                    strings.add(Integer.toString(i));
+                }
 
-            MemoryManager.addNumbers(context, strings);
-            MemoryManager.setLastNumber(context, last + 10);
-            updateLinearLayout();
+                MemoryManager.addNumbers(context, strings);
+                MemoryManager.setLastNumber(context, last + 10);
+                updateLinearLayout();
+            }, DELAY);
         });
     }
 

@@ -38,7 +38,7 @@ class MemoryManager {
     }
 
     static HashSet<String> getNumbers(Context context) {
-        return (HashSet<String>) getSharedPreferences(context).getStringSet(NUMBERS, new HashSet<>(Arrays.asList("1001", "1002", "1003", "1004")));
+        return (HashSet<String>) getSharedPreferences(context).getStringSet(NUMBERS, new HashSet<>());
     }
 
     static void setNumbers(Context context, HashSet<String> numbers) {
