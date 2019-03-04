@@ -35,7 +35,7 @@ public class StorageManager {
         if (lastLayoutNumber < lastNumber) {
             if (loadAll) {
                 int currentItem = lastLayoutNumber + 1;
-                while (currentItem < lastLayoutNumber) {
+                while (currentItem <= lastNumber) {
                     result.add(currentItem);
                     currentItem++;
                 }

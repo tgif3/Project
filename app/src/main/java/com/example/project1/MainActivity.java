@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
         for (Integer num : arrayList) {
             TextView textView = new TextView(context);
             textView.setTextSize(25);
-            textView.setText(num);
+            textView.setText(num + "");
 
             linearLayout.addView(textView);
         }
