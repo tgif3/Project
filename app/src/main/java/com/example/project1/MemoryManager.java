@@ -20,13 +20,6 @@ class MemoryManager {
         return context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
     }
 
-    static void initialize(Context context) {
-        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-        editor.remove(NUMBERS);
-        editor.remove(LAST);
-        editor.apply();
-    }
-
     static int getLastNumber(Context context) {
         return getSharedPreferences(context).getInt(LAST, 0);
     }
@@ -39,12 +32,6 @@ class MemoryManager {
 
     static HashSet<String> getNumbers(Context context) {
         return (HashSet<String>) getSharedPreferences(context).getStringSet(NUMBERS, new HashSet<>());
-    }
-
-    static void setNumbers(Context context, HashSet<String> numbers) {
-        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-        editor.putStringSet(NUMBERS, numbers);
-        editor.apply();
     }
 
     static void addNumbers(Context context, HashSet<String> numbers) {
