@@ -21,12 +21,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity implements RepositoryObserver {
-    private int last;
     private Context context;
-    private Handler handler;
     private LinearLayout linearLayout;
     private MessageController messageController;
-    private static final int DELAY = 100;
 
     private Subject notificationCenter;
 
@@ -35,9 +32,7 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        last = 0;
         context = MainActivity.this;
-        handler = new Handler();
 
         notificationCenter = NotificationCenter.getInstance();
         notificationCenter.registerObserver(this);
