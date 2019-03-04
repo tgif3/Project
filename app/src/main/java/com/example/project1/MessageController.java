@@ -18,16 +18,26 @@ public class MessageController {
         data = new ArrayList<>();
     }
 
-    public void fetch(boolean fromCache) throws InterruptedException {
-        if (fromCache)
-            data.addAll(storageManager.Load(context, getLastItem(), false));
-        else {
-            ArrayList<Integer> networkNumbers = connectionManager.Load(storageManager.readLastNumber(context));
-            storageManager.Save(networkNumbers.get(networkNumbers.size() - 1), context);
-            data.addAll(storageManager.Load(context, getLastItem(), true));
+    public void fetch(boolean fromCache) {
+        if (fromCache) {
+            new Thread(() -> {
+                data.addAll(storageManager.Load(context, getLastItem(), false));
+                refreshLayout();
+            }, "storage");
         }
+        else {
+            new Thread(() -> {
+                try {
+                    ArrayList<Integer> networkNumbers = connectionManager.Load(storageManager.readLastNumber(context));
+                    storageManager.Save(networkNumbers.get(networkNumbers.size() - 1), context);
+                    data.addAll(storageManager.Load(context, getLastItem(), true));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-        refreshLayout();
+                refreshLayout();
+            }, "cloud");
+        }
     }
 
     private void refreshLayout() {

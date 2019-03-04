@@ -20,7 +20,6 @@ public class StorageManager {
     }
 
     public void Save(int lastNumber, Context context) {
-        // TODO create new thread named "storage"
 
 //        new Thread(() -> {
         setLastNumber(context, lastNumber);
@@ -28,7 +27,6 @@ public class StorageManager {
     }
 
     public ArrayList<Integer> Load(Context context, int lastLayoutNumber, boolean loadAll) {
-        // TODO create new thread named "storage"
         int lastNumber = readLastNumber(context);
         ArrayList<Integer> result = new ArrayList<>();
 

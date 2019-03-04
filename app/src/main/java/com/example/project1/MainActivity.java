@@ -53,20 +53,12 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
 
         Button refreshBtn = findViewById(R.id.refresh_btn);
         refreshBtn.setOnClickListener(v -> {
-            try {
-                messageController.fetch(true);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            messageController.fetch(true);
         });
 
         Button getBtn = findViewById(R.id.get_btn);
         getBtn.setOnClickListener(v -> {
-            try {
-                messageController.fetch(false);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            messageController.fetch(false);
         });
     }
 
