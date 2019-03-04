@@ -1,29 +1,37 @@
 package com.example.project1;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 public class StorageManager {
+    private static final String KEY = "MANAGER";
+    private static final String LAST_KEY = "LAST_KEY";
+
+    private static SharedPreferences getSharedPreferences(Context context) {
+        return context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
+    }
+
+    private static void setLastNumber(Context context, int number) {
+        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putInt(LAST_KEY, number);
+        editor.apply();
+    }
+
     public void Save(int lastNumber, Context context) {
         // TODO create new thread named "storage"
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("config.txt", Context.MODE_PRIVATE));
-            outputStreamWriter.write(lastNumber);
-            outputStreamWriter.close();
-        }
-        catch (Exception e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }
+
+//        new Thread(() -> {
+        setLastNumber(context, lastNumber);
+//        }, "storage")
     }
 
     public ArrayList<Integer> Load(Context context) {
@@ -39,20 +47,6 @@ public class StorageManager {
     }
 
     private int readLastNumber(Context context) {
-        StringBuilder stringBuilder = new StringBuilder();
-        String line;
-        BufferedReader reader = null;
-
-        try {
-            reader = new BufferedReader(new FileReader(new File(context.getFilesDir(), "config.txt")));
-            while ((line = reader.readLine()) != null) stringBuilder.append(line);
-
-        } catch (FileNotFoundException e) {
-            Log.e("Exception", e.toString());
-        } catch (IOException e) {
-            Log.e("Exception", e.toString());
-        }
-
-        return Integer.parseInt(stringBuilder.toString());
+        return getSharedPreferences(context).getInt(LAST_KEY, 0);
     }
 }
