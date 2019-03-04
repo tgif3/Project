@@ -106,6 +106,6 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
 
     @Override
     public void updateData(ArrayList<Integer> arrayList) {
-        updateLinearLayout();
+        updateLinearLayout(arrayList);
     }
 }

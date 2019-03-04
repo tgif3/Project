@@ -14,6 +14,7 @@ public class MessageController {
         this.context = context;
         storageManager = new StorageManager();
         connectionManager = new ConnectionManager();
+        NotificationCenter notificationCenter = NotificationCenter.getInstance();
         data = new ArrayList<>();
     }
 
@@ -26,7 +27,8 @@ public class MessageController {
             storageManager.Save(getLastItem(), context);
         }
 
-
+        NotificationCenter notificationCenter = NotificationCenter.getInstance();
+        notificationCenter.data_loaded(data);
     }
 
     private int getLastItem()
