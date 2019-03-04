@@ -1,6 +1,7 @@
 package com.example.project1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -86,18 +87,12 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
         });
     }
 
-    private void updateLinearLayout() {
-        HashSet<String> strings = MemoryManager.getNumbers(context);
-        Set<Integer> strings1 = new TreeSet<>();
-        for (String string : strings) {
-            strings1.add(Integer.parseInt(string));
-        }
-
+    private void updateLinearLayout(ArrayList<Integer> arrayList) {
         linearLayout.removeAllViews();
-        for (int num : strings1) {
+        for (Integer num : arrayList) {
             TextView textView = new TextView(context);
             textView.setTextSize(25);
-            textView.setText(num + " ");
+            textView.setText(num);
 
             linearLayout.addView(textView);
         }
@@ -110,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
     }
 
     @Override
-    public void updateData() {
+    public void updateData(ArrayList<Integer> arrayList) {
         updateLinearLayout();
     }
 }

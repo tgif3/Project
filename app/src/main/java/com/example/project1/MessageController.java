@@ -26,7 +26,6 @@ public class MessageController {
             storageManager.Save(getLastItem(), context);
         }
 
-        //TODO Update notification center
 
     }
 

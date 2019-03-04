@@ -37,9 +37,9 @@ public class NotificationCenter implements Subject {
     }
 
     @Override
-    public void data_loaded() {
+    public void data_loaded(ArrayList<Integer> arrayList) {
         for (RepositoryObserver observer: observers) {
-            observer.updateData();
+            observer.updateData(arrayList);
         }
     }
 }
