@@ -2,14 +2,6 @@ package com.example.project1;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class StorageManager {
@@ -46,7 +38,7 @@ public class StorageManager {
         return result;
     }
 
-    private int readLastNumber(Context context) {
+    public int readLastNumber(Context context) {
         return getSharedPreferences(context).getInt(LAST_KEY, 0);
     }
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.project1.interfaces.RepositoryObserver;
 import com.example.project1.interfaces.Subject;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
 
         Button refreshBtn = findViewById(R.id.refresh_btn);
         refreshBtn.setOnClickListener(v -> {
-            int mLast = MemoryManager.getLastNumber(context);
+            ArrayList<Integer> items = storageManager.Load(context);
             linearLayout.removeAllViews();
             if (last < mLast) {
                 for (int i = last + 1; i <= last + 10; i++) {
