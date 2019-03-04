@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
     private Context context;
     private Handler handler;
     private LinearLayout linearLayout;
+    private MessageController messageController;
     private static final int DELAY = 100;
 
     private Subject notificationCenter;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
         notificationCenter = NotificationCenter.getInstance();
         notificationCenter.registerObserver(this);
 
+        messageController = new MessageController(context);
+
         // initialize
         initializeUI();
     }
@@ -50,40 +53,25 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
 
         Button clearBtn = findViewById(R.id.clear_btn);
         clearBtn.setOnClickListener(v -> {
-            last = 0;
-            linearLayout.removeAllViews();
+            messageController.clear();
         });
 
         Button refreshBtn = findViewById(R.id.refresh_btn);
         refreshBtn.setOnClickListener(v -> {
-            ArrayList<Integer> items = storageManager.Load(context);
-            linearLayout.removeAllViews();
-            if (last < mLast) {
-                for (int i = last + 1; i <= last + 10; i++) {
-                    TextView textView = new TextView(context);
-                    textView.setTextSize(25);
-                    textView.setText(i + " ");
-
-                    linearLayout.addView(textView);
-                }
+            try {
+                messageController.fetch(true);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            last += 10;
         });
 
         Button getBtn = findViewById(R.id.get_btn);
         getBtn.setOnClickListener(v -> {
-            handler.postDelayed(() -> {
-                int last = MemoryManager.getLastNumber(context);
-                HashSet<String> strings = new HashSet<>();
-
-                for (int i = last + 1; i < last + 11; i++) {
-                    strings.add(Integer.toString(i));
-                }
-
-                MemoryManager.addNumbers(context, strings);
-                MemoryManager.setLastNumber(context, last + 10);
-                updateLinearLayout();
-            }, DELAY);
+            try {
+                messageController.fetch(false);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
     }
 

@@ -20,19 +20,31 @@ public class MessageController {
 
     public void fetch(boolean fromCache) throws InterruptedException {
         if (fromCache)
-            data.addAll(storageManager.Load(context));
-        else
-        {
-            data.addAll(connectionManager.Load(storageManager.readLastNumber(context)));
-            storageManager.Save(getLastItem(), context);
+            data.addAll(storageManager.Load(context, getLastItem(), false));
+        else {
+            ArrayList<Integer> networkNumbers = connectionManager.Load(storageManager.readLastNumber(context));
+            storageManager.Save(networkNumbers.get(networkNumbers.size() - 1), context);
+            data.addAll(storageManager.Load(context, getLastItem(), true));
         }
 
+        refreshLayout();
+    }
+
+    private void refreshLayout() {
         NotificationCenter notificationCenter = NotificationCenter.getInstance();
         notificationCenter.data_loaded(data);
     }
 
-    private int getLastItem()
-    {
-        return data.get(data.size() - 1);
+    private int getLastItem() {
+        if (data.isEmpty())
+            return 0;
+        else
+            return data.get(data.size() - 1);
+    }
+
+    public void clear() {
+        data = new ArrayList<>();
+
+        refreshLayout();
     }
 }

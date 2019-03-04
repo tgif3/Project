@@ -2,6 +2,7 @@ package com.example.project1;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import java.util.ArrayList;
 
 public class StorageManager {
@@ -26,13 +27,22 @@ public class StorageManager {
 //        }, "storage")
     }
 
-    public ArrayList<Integer> Load(Context context) {
+    public ArrayList<Integer> Load(Context context, int lastLayoutNumber, boolean loadAll) {
         // TODO create new thread named "storage"
         int lastNumber = readLastNumber(context);
-
         ArrayList<Integer> result = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            result.add(lastNumber + i);
+
+        if (lastLayoutNumber < lastNumber) {
+            if (loadAll) {
+                int currentItem = lastLayoutNumber + 1;
+                while (currentItem < lastLayoutNumber) {
+                    result.add(currentItem);
+                    currentItem++;
+                }
+            } else {
+                for (int i = 1; i <= 10; i++)
+                    result.add(lastLayoutNumber + i);
+            }
         }
 
         return result;
