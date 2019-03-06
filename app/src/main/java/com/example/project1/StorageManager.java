@@ -8,27 +8,22 @@ import java.util.ArrayList;
 public class StorageManager {
     private static final String KEY = "MANAGER";
     private static final String LAST_KEY = "LAST_KEY";
-
-    private static SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
+    private static StorageManager INSTANCE;
+    private StorageManager() {
     }
 
-    private static void setLastNumber(Context context, int number) {
-        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-        editor.putInt(LAST_KEY, number);
-        editor.apply();
+    public static StorageManager getInstance() {
+        if(INSTANCE == null) {
+            INSTANCE = new StorageManager();
+        }
+        return INSTANCE;
     }
 
-    public void Save(int lastNumber, Context context) {
-        // TODO create new thread named "storage"
-
-//        new Thread(() -> {
+    public void save(int lastNumber, Context context) {
         setLastNumber(context, lastNumber);
-//        }, "storage")
     }
 
-    public ArrayList<Integer> Load(Context context, int lastLayoutNumber, boolean loadAll) {
-        // TODO create new thread named "storage"
+    public ArrayList<Integer> load(Context context, int lastLayoutNumber, boolean loadAll) {
         int lastNumber = readLastNumber(context);
         ArrayList<Integer> result = new ArrayList<>();
 
@@ -48,7 +43,17 @@ public class StorageManager {
         return result;
     }
 
+    private static SharedPreferences getSharedPreferences(Context context) {
+        return context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
+    }
+
     public int readLastNumber(Context context) {
         return getSharedPreferences(context).getInt(LAST_KEY, 0);
+    }
+
+    private static void setLastNumber(Context context, int number) {
+        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putInt(LAST_KEY, number);
+        editor.apply();
     }
 }

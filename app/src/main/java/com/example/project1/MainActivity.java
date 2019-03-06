@@ -37,9 +37,8 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
         notificationCenter = NotificationCenter.getInstance();
         notificationCenter.registerObserver(this);
 
-        messageController = new MessageController(context);
+        messageController = MessageController.getInstance(context);
 
-        // initialize
         initializeUI();
     }
 
@@ -71,14 +70,15 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
     }
 
     private void updateLinearLayout(ArrayList<Integer> arrayList) {
-        linearLayout.removeAllViews();
-        for (Integer num : arrayList) {
-            TextView textView = new TextView(context);
-            textView.setTextSize(25);
-            textView.setText(num + "");
-
-            linearLayout.addView(textView);
-        }
+        linearLayout.post(() -> {
+            linearLayout.removeAllViews();
+            for (Integer num : arrayList) {
+                TextView textView = new TextView(context);
+                textView.setTextSize(25);
+                textView.setText(num + "");
+                linearLayout.addView(textView);
+            }
+        });
     }
 
     @Override

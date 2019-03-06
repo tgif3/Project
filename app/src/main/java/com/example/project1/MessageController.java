@@ -5,34 +5,50 @@ import android.content.Context;
 import java.util.ArrayList;
 
 public class MessageController {
-    private StorageManager storageManager;
-    private ConnectionManager connectionManager;
     private Context context;
+    private NotificationCenter notificationCenter;
+    private ConnectionManager connectionManager;
+    private StorageManager storageManager;
     private ArrayList<Integer> data;
 
-    public MessageController(Context context) {
+    private ArrayList<Integer> messages;
+
+    private static MessageController INSTANCE;
+
+    private MessageController(Context context) {
         this.context = context;
-        storageManager = new StorageManager();
-        connectionManager = new ConnectionManager();
-        NotificationCenter notificationCenter = NotificationCenter.getInstance();
+        storageManager = StorageManager.getInstance();
+        connectionManager = ConnectionManager.getInstance();
+        notificationCenter = NotificationCenter.getInstance();
         data = new ArrayList<>();
     }
 
-    public void fetch(boolean fromCache) throws InterruptedException {
-        if (fromCache)
-            data.addAll(storageManager.Load(context, getLastItem(), false));
-        else {
-            ArrayList<Integer> networkNumbers = connectionManager.Load(storageManager.readLastNumber(context));
-            storageManager.Save(networkNumbers.get(networkNumbers.size() - 1), context);
-            data.addAll(storageManager.Load(context, getLastItem(), true));
+    public static MessageController getInstance(Context context) {
+        if(INSTANCE == null) {
+            INSTANCE = new MessageController(context);
         }
-
-        refreshLayout();
+        return INSTANCE;
     }
 
-    private void refreshLayout() {
-        NotificationCenter notificationCenter = NotificationCenter.getInstance();
-        notificationCenter.data_loaded(data);
+    public void fetch(boolean fromCache) throws InterruptedException {
+        if (fromCache) {
+            Thread storage = new Thread(() -> {
+                messages = storageManager.load(context, getLastItem(), false);
+                data.addAll(messages);
+                notificationCenter.data_loaded(data);
+            }, "storage");
+            storage.start();
+        }
+        else {
+            Thread cloud = new Thread(() -> {
+                messages = connectionManager.load(storageManager.readLastNumber(context));
+                data = storageManager.load(context, 0, true);
+                data.addAll(messages);
+                notificationCenter.data_loaded(data);
+                storageManager.save(messages.get(messages.size() - 1), context);
+            }, "cloud");
+            cloud.start();
+        }
     }
 
     private int getLastItem() {
@@ -44,7 +60,6 @@ public class MessageController {
 
     public void clear() {
         data = new ArrayList<>();
-
-        refreshLayout();
+        notificationCenter.data_loaded(data);
     }
 }

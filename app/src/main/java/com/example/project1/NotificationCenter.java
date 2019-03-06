@@ -1,5 +1,4 @@
 package com.example.project1;
-import android.os.Handler;
 
 import com.example.project1.interfaces.RepositoryObserver;
 import com.example.project1.interfaces.Subject;
@@ -14,7 +13,6 @@ public class NotificationCenter implements Subject {
 
     private NotificationCenter() {
         observers = new ArrayList<>();
-//        getNewDataFromRemote();
     }
 
     public static NotificationCenter getInstance() {
