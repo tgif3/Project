@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 
-public class StorageManager {
+class StorageManager {
     private static final String KEY = "MANAGER";
     private static final String LAST_KEY = "LAST_KEY";
 
@@ -19,14 +19,12 @@ public class StorageManager {
         editor.apply();
     }
 
-    public void Save(int lastNumber, Context context) {
+    void Save(int lastNumber, Context context) {
 
-//        new Thread(() -> {
         setLastNumber(context, lastNumber);
-//        }, "storage")
     }
 
-    public ArrayList<Integer> Load(Context context, int lastLayoutNumber, boolean loadAll) {
+    ArrayList<Integer> Load(Context context, int lastLayoutNumber, boolean loadAll) {
         int lastNumber = readLastNumber(context);
         ArrayList<Integer> result = new ArrayList<>();
 
@@ -46,7 +44,7 @@ public class StorageManager {
         return result;
     }
 
-    public int readLastNumber(Context context) {
+    int readLastNumber(Context context) {
         return getSharedPreferences(context).getInt(LAST_KEY, 0);
     }
 }
