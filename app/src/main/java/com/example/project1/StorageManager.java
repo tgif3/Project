@@ -9,8 +9,7 @@ public class StorageManager {
     private static final String KEY = "MANAGER";
     private static final String LAST_KEY = "LAST_KEY";
     private static StorageManager INSTANCE;
-    private StorageManager() {
-    }
+    private StorageManager() {}
 
     public static StorageManager getInstance() {
         if(INSTANCE == null) {

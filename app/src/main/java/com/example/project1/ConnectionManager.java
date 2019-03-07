@@ -5,8 +5,7 @@ import java.util.ArrayList;
 public class ConnectionManager {
     private static ConnectionManager INSTANCE;
 
-    private ConnectionManager() {
-    }
+    private ConnectionManager() {}
 
     public static ConnectionManager getInstance() {
         if(INSTANCE == null) {

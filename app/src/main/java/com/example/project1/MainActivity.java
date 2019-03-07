@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.project1.interfaces.RepositoryObserver;
 import com.example.project1.interfaces.Subject;
@@ -69,8 +70,8 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
             for (Integer num : arrayList) {
                 TextView textView = new TextView(context);
                 textView.setTextSize(30);
-                textView.setTextColor(Color.rgb(0, 175, 0));
-                textView.setText(num + "");
+                textView.setTextColor(Color.rgb(0, 150, 0));
+                textView.setText(String.valueOf(num));
                 linearLayout.addView(textView);
             }
         });
