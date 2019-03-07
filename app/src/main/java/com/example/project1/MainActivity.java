@@ -3,6 +3,7 @@ package com.example.project1;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.example.project1.interfaces.Subject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -52,29 +54,22 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
 
         Button refreshBtn = findViewById(R.id.refresh_btn);
         refreshBtn.setOnClickListener(v -> {
-            try {
-                messageController.fetch(true);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            messageController.fetch(true);
         });
 
         Button getBtn = findViewById(R.id.get_btn);
         getBtn.setOnClickListener(v -> {
-            try {
-                messageController.fetch(false);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            messageController.fetch(false);
         });
     }
 
     private void updateLinearLayout(ArrayList<Integer> arrayList) {
-        linearLayout.post(() -> {
+        runOnUiThread(() -> {
             linearLayout.removeAllViews();
             for (Integer num : arrayList) {
                 TextView textView = new TextView(context);
-                textView.setTextSize(25);
+                textView.setTextSize(30);
+                textView.setTextColor(Color.GREEN);
                 textView.setText(num + "");
                 linearLayout.addView(textView);
             }

@@ -30,7 +30,7 @@ public class MessageController {
         return INSTANCE;
     }
 
-    public void fetch(boolean fromCache) throws InterruptedException {
+    public void fetch(boolean fromCache) {
         if (fromCache) {
             Thread storage = new Thread(() -> {
                 messages = storageManager.load(context, getLastItem(), false);
