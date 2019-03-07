@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements RepositoryObserve
             for (Integer num : arrayList) {
                 TextView textView = new TextView(context);
                 textView.setTextSize(30);
-                textView.setTextColor(Color.GREEN);
+                textView.setTextColor(Color.rgb(0, 175, 0));
                 textView.setText(num + "");
                 linearLayout.addView(textView);
             }
