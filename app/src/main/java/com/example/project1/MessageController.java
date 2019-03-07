@@ -4,39 +4,51 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
-class MessageController {
-    private StorageManager storageManager;
-    private ConnectionManager connectionManager;
+public class MessageController {
     private Context context;
+    private NotificationCenter notificationCenter;
+    private ConnectionManager connectionManager;
+    private StorageManager storageManager;
     private ArrayList<Integer> data;
 
-    MessageController(Context context) {
+    private ArrayList<Integer> messages;
+
+    private static MessageController INSTANCE;
+
+    private MessageController(Context context) {
         this.context = context;
-        storageManager = new StorageManager();
-        connectionManager = new ConnectionManager();
+        storageManager = StorageManager.getInstance();
+        connectionManager = ConnectionManager.getInstance();
+        notificationCenter = NotificationCenter.getInstance();
         data = new ArrayList<>();
     }
 
-    void fetch(boolean fromCache) {
-        if (fromCache) {
-            MainActivity.handler.post(() -> {
-                data.addAll(storageManager.Load(context, getLastItem(), false));
-                refreshLayout();
-            });
-        } else {
-            MainActivity.handler.postDelayed(() -> {
-                ArrayList<Integer> networkNumbers = connectionManager.Load(storageManager.readLastNumber(context));
-                storageManager.Save(networkNumbers.get(networkNumbers.size() - 1), context);
-                data.addAll(storageManager.Load(context, getLastItem(), true));
-
-                refreshLayout();
-            }, 100);
+    public static MessageController getInstance(Context context) {
+        if(INSTANCE == null) {
+            INSTANCE = new MessageController(context);
         }
+        return INSTANCE;
     }
 
-    private void refreshLayout() {
-        NotificationCenter notificationCenter = NotificationCenter.getInstance();
-        notificationCenter.data_loaded(data);
+    public void fetch(boolean fromCache) throws InterruptedException {
+        if (fromCache) {
+            Thread storage = new Thread(() -> {
+                messages = storageManager.load(context, getLastItem(), false);
+                data.addAll(messages);
+                notificationCenter.data_loaded(data);
+            }, "storage");
+            storage.start();
+        }
+        else {
+            Thread cloud = new Thread(() -> {
+                messages = connectionManager.load(storageManager.readLastNumber(context));
+                data = storageManager.load(context, 0, true);
+                data.addAll(messages);
+                notificationCenter.data_loaded(data);
+                storageManager.save(messages.get(messages.size() - 1), context);
+            }, "cloud");
+            cloud.start();
+        }
     }
 
     private int getLastItem() {
@@ -46,9 +58,8 @@ class MessageController {
             return data.get(data.size() - 1);
     }
 
-    void clear() {
+    public void clear() {
         data = new ArrayList<>();
-
-        refreshLayout();
+        notificationCenter.data_loaded(data);
     }
 }

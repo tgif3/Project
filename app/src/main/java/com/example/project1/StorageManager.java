@@ -5,26 +5,25 @@ import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 
-class StorageManager {
+public class StorageManager {
     private static final String KEY = "MANAGER";
     private static final String LAST_KEY = "LAST_KEY";
-
-    private static SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
+    private static StorageManager INSTANCE;
+    private StorageManager() {
     }
 
-    private static void setLastNumber(Context context, int number) {
-        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-        editor.putInt(LAST_KEY, number);
-        editor.apply();
+    public static StorageManager getInstance() {
+        if(INSTANCE == null) {
+            INSTANCE = new StorageManager();
+        }
+        return INSTANCE;
     }
 
-    void Save(int lastNumber, Context context) {
-
+    public void save(int lastNumber, Context context) {
         setLastNumber(context, lastNumber);
     }
 
-    ArrayList<Integer> Load(Context context, int lastLayoutNumber, boolean loadAll) {
+    public ArrayList<Integer> load(Context context, int lastLayoutNumber, boolean loadAll) {
         int lastNumber = readLastNumber(context);
         ArrayList<Integer> result = new ArrayList<>();
 
@@ -44,7 +43,17 @@ class StorageManager {
         return result;
     }
 
-    int readLastNumber(Context context) {
+    private static SharedPreferences getSharedPreferences(Context context) {
+        return context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
+    }
+
+    public int readLastNumber(Context context) {
         return getSharedPreferences(context).getInt(LAST_KEY, 0);
+    }
+
+    private static void setLastNumber(Context context, int number) {
+        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putInt(LAST_KEY, number);
+        editor.apply();
     }
 }
